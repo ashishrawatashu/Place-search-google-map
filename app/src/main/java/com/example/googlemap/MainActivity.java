@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.Activity;
@@ -45,200 +47,198 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class MainActivity extends AppCompatActivity /*implements OnMapReadyCallback,
         LocationListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener */{
     private GoogleMap mMap;
     Location mLastLocation;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
     Marker mCurrLocationMarker;
-    Button button;
+    public static Button button;
     public static String destination_address = "", destination_latlng = "";
     public static Double dest_latitude = 0.0, dest_longitude = 0.0, src_latitude = 0.0, src_longitude = 0.0;
     String CAMERA="location";
     private AutocompleteSupportFragment autocompleteFragment;
     LinearLayout maoLL;
-    TextView addressTV;
+    public static TextView addressTV;
+    public static String address = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = findViewById(R.id.findMap);
-        maoLL = findViewById(R.id.mapLL);
+        button=findViewById(R.id.mapBT);
         addressTV= findViewById(R.id.addressTV);
-
-        Places.initialize(getApplicationContext(), "", Locale.US);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS));
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-
-                Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
-                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
-                addressTV.setText(place.getAddress().trim());
-                destination_address = place.getAddress().trim();
-                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
-                dest_longitude = place.getLatLng().longitude;
-                dest_latitude = place.getLatLng().latitude;
-                Log.e("dest_address", destination_address + "\n" + destination_latlng);
-                CAMERA = "dest";
-                mMap.clear();
-                onMapReady(mMap);
-
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.e("TAG", "An error occurred: " + status);
-            }
-        });
-
+        addressTV.setText(address);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                maoLL.setVisibility(View.GONE);
-                addressTV.setVisibility(View.VISIBLE);
-
-
-//                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
-//                Intent intent = new Autocomplete.IntentBuilder(
-//                        AutocompleteActivityMode.FULLSCREEN, fields)
-//                        .build(MainActivity.this);
-//                startActivityForResult(intent, 1);
-
+                addressTV.setVisibility(View.GONE);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                MapView  mapview = new MapView();
+                fragmentTransaction.add(R.id.frame, mapview);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
 
             }
         });
 
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-
-
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if (resultCode == RESULT_OK){
-                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
-                Place place = Autocomplete.getPlaceFromIntent(data);
-
-                Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
-
-                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
-
-                //Place place = Autocomplete.getPlaceFromIntent(data);
-                addressTV.setText(place.getAddress().trim());
-                destination_address = place.getAddress().trim();
-                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
-                dest_longitude = place.getLatLng().longitude;
-                dest_latitude = place.getLatLng().latitude;
-                Log.e("dest_address", destination_address + "\n" + destination_latlng);
-                CAMERA = "dest";
-                mMap.clear();
-                onMapReady(mMap);
+//        Places.initialize(getApplicationContext(), "AIzaSyClXYwahInayLuwd5sQpm5k2jVW2Oc8490",Locale.US);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
+//
+//        autocompleteFragment = (AutocompleteSupportFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+//        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS));
+//
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//
+//            @Override
+//            public void onPlaceSelected(@NonNull Place place) {
+//
+//                Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
+//                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
+//                addressTV.setText(place.getAddress().trim());
+//                destination_address = place.getAddress().trim();
+//                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
+//                dest_longitude = place.getLatLng().longitude;
+//                dest_latitude = place.getLatLng().latitude;
+//                Log.e("dest_address", destination_address + "\n" + destination_latlng);
+//                CAMERA = "dest";
+//                mMap.clear();
+//                onMapReady(mMap);
+//
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                Log.e("TAG", "An error occurred: " + status);
+//            }
+//        });
 
 
-            }
-        }
-    }
-    @Override
-    public void onConnectionSuspended(int i) {
 
-    }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-        mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-        src_latitude = location.getLatitude();
-        src_longitude = location.getLongitude();
-        LatLng latLng = new LatLng(src_latitude, src_longitude);
-//        mMap.addMarker(new MarkerOptions()
-//                .position(latLng));
-        if (CAMERA.equals("location")) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
-        }
-
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-        }
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
-            }
-        } else {
-            buildGoogleApiClient();
-            mMap.setMyLocationEnabled(true);
-        }
-                double lat = 0;
-                double log =0;
-                    lat = Double.parseDouble(String.valueOf(dest_latitude));
-                    log = Double.parseDouble(String.valueOf(dest_longitude));
-                    Log.e("llll11", String.valueOf(lat));
-                    Log.e("llll22", String.valueOf(log));
-                    LatLng location = new LatLng(lat, log);
-                    mMap.addMarker(new MarkerOptions().position(location));
-        CameraPosition camPos = new CameraPosition.Builder()
-                .target(new LatLng(dest_latitude, dest_longitude))
-                .zoom(18)
-                .build();
-        CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-        googleMap.animateCamera(camUpd3);
-
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API).build();
-        mGoogleApiClient.connect();
-
-    }
+//    @Override
+//    public void onConnected(@Nullable Bundle bundle) {
+//
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest.setInterval(1000);
+//        mLocationRequest.setFastestInterval(1000);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+//        if (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                == PackageManager.PERMISSION_GRANTED) {
+//            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+//        }
+//
+//
+//    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1){
+//            if (resultCode == RESULT_OK){
+//                Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
+//                Place place = Autocomplete.getPlaceFromIntent(data);
+//
+//                Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
+//
+//                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
+//
+//                //Place place = Autocomplete.getPlaceFromIntent(data);
+//                addressTV.setText(place.getAddress().trim());
+//                destination_address = place.getAddress().trim();
+//                destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
+//                dest_longitude = place.getLatLng().longitude;
+//                dest_latitude = place.getLatLng().latitude;
+//                Log.e("dest_address", destination_address + "\n" + destination_latlng);
+//                CAMERA = "dest";
+//                mMap.clear();
+//                onMapReady(mMap);
+//
+//
+//            }
+//        }
+//    }
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//
+//    }
+//
+//    @Override
+//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+//
+//    }
+//
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        mMap.clear();
+//        mLastLocation = location;
+//        if (mCurrLocationMarker != null) {
+//            mCurrLocationMarker.remove();
+//        }
+//        src_latitude = location.getLatitude();
+//        src_longitude = location.getLongitude();
+//        LatLng latLng = new LatLng(src_latitude, src_longitude);
+////        mMap.addMarker(new MarkerOptions()
+////                .position(latLng));
+//        if (CAMERA.equals("location")) {
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//            mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+//        }
+//
+//        if (mGoogleApiClient != null) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//        mMap = googleMap;
+//        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//                buildGoogleApiClient();
+//                mMap.setMyLocationEnabled(true);
+//            }
+//        } else {
+//            buildGoogleApiClient();
+//            mMap.setMyLocationEnabled(true);
+//        }
+//                double lat = 0;
+//                double log =0;
+//                    lat = Double.parseDouble(String.valueOf(dest_latitude));
+//                    log = Double.parseDouble(String.valueOf(dest_longitude));
+//                    Log.e("llll11", String.valueOf(lat));
+//                    Log.e("llll22", String.valueOf(log));
+//                    LatLng location = new LatLng(lat, log);
+//                    mMap.addMarker(new MarkerOptions().position(location));
+//        CameraPosition camPos = new CameraPosition.Builder()
+//                .target(new LatLng(dest_latitude, dest_longitude))
+//                .zoom(18)
+//                .build();
+//        CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
+//        googleMap.animateCamera(camUpd3);
+//
+//    }
+//
+//    protected synchronized void buildGoogleApiClient() {
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(LocationServices.API).build();
+//        mGoogleApiClient.connect();
+//
+//    }
 
     @Override
     protected void onRestart() {
