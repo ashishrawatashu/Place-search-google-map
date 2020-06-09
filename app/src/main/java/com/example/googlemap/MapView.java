@@ -80,32 +80,34 @@ public class MapView extends Fragment implements OnMapReadyCallback,
         View view=  inflater.inflate(R.layout.fragment_map_view, container, false);
         button = view.findViewById(R.id.findMap);
         maoLL = view.findViewById(R.id.mapLL);
+        HomeFragment.button.setVisibility(View.GONE);
         Places.initialize(getActivity(), "", Locale.US);
-        MainActivity.button.setVisibility(View.GONE);
             mapFragment();
             autoComp();
             autocompClick();
             confirmClick();
 
         return view;
+
     }
 
     private void confirmClick() {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.addressTV.setVisibility(View.VISIBLE);
-                MainActivity.button.setVisibility(View.VISIBLE);
+                HomeFragment.button.setVisibility(View.VISIBLE);
+                HomeFragment.addressTV.setVisibility(View.VISIBLE);
                 getFragmentManager().beginTransaction().remove(MapView.this).commit();
                 getFragmentManager().popBackStack();
 
-//                maoLL.setVisibility(View.GONE);
 
+//                maoLL.setVisibility(View.GONE);
 //                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
 //                Intent intent = new Autocomplete.IntentBuilder(
-//                        AutocompleteActivityMode.FULLSCREEN, fields)
+//                       AutocompleteActivityMode.FULLSCREEN, fields)
 //                        .build(MainActivity.this);
 //                startActivityForResult(intent, 1);
+
 
 
             }
@@ -120,7 +122,7 @@ public class MapView extends Fragment implements OnMapReadyCallback,
             public void onPlaceSelected(@NonNull Place place) {
 
                 Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
-                MainActivity.addressTV.setText(place.getAddress());
+                HomeFragment.addressTV.setText(place.getAddress());
                 mapclear = "map";
                 destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
                 destination_address = place.getAddress().trim();
@@ -240,4 +242,6 @@ public class MapView extends Fragment implements OnMapReadyCallback,
         mGoogleApiClient.connect();
 
     }
+
+
 }
