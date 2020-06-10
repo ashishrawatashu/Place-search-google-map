@@ -15,7 +15,23 @@
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DEHRADUN"/>
+        android:text=""/>
+    <TextView
+        android:layout_below="@id/addressTV"
+        android:id="@+id/stateTV"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
+    <TextView
+        android:layout_below="@id/stateTV"
+        android:id="@+id/cityTV"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
 
     <Button
         android:visibility="visible"

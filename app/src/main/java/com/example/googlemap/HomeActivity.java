@@ -27,5 +27,15 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+       // HomeFragment.addressss="";
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 }

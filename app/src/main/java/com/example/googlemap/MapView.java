@@ -41,6 +41,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -66,6 +67,7 @@ public class MapView extends Fragment implements OnMapReadyCallback,
     LinearLayout maoLL;
     Context context;
     public static String mapclear = "";
+    String addresss = "", city ="", state ="";
 
 
     public MapView() {
@@ -80,27 +82,34 @@ public class MapView extends Fragment implements OnMapReadyCallback,
         View view=  inflater.inflate(R.layout.fragment_map_view, container, false);
         button = view.findViewById(R.id.findMap);
         maoLL = view.findViewById(R.id.mapLL);
-        HomeFragment.button.setVisibility(View.GONE);
         Places.initialize(getActivity(), "AIzaSyClXYwahInayLuwd5sQpm5k2jVW2Oc8490", Locale.US);
-            mapFragment();
+
+        mapFragment();
             autoComp();
             autocompClick();
-            confirmClick();
-
-        return view;
-
-    }
-
-    private void confirmClick() {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HomeFragment.button.setVisibility(View.VISIBLE);
-                HomeFragment.addressTV.setVisibility(View.VISIBLE);
-                getFragmentManager().beginTransaction().remove(MapView.this).commit();
+                HomeFragment homeFragment = new HomeFragment ();
+                Bundle bundle = new Bundle();
+                bundle.putString("addrerss", destination_address);
+                bundle.putString("city",city);
+                bundle.putString("state",state);
+
+                Log.e("bundel", String.valueOf(bundle));
+//                bundle.putString("state", "YourValue");
+//                bundle.putString("city", "YourValue");
+                homeFragment.setArguments(bundle);
+
+//Inflate the fragment
+                getFragmentManager().beginTransaction().replace(R.id.frame, homeFragment).commit();
+                //getFragmentManager().beginTransaction().remove(MapView.this,bundle).commit();
                 getFragmentManager().popBackStack();
             }
+
         });
+        return view;
+
     }
 
     private void autocompClick() {
@@ -109,9 +118,17 @@ public class MapView extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-
                 Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
-                HomeFragment.address= place.getAddress();
+                Log.e("componet",place.getAddressComponents().toString());
+                if (place.getAddressComponents().asList().size()<=1){
+                    destination_address = place.getAddressComponents().asList().get(0).getName();
+
+                }else {
+                city = place.getAddressComponents().asList().get(0).getName();
+                state = place.getAddressComponents().asList().get(2).getName();
+                    destination_address=place.getAddress();
+
+                }
                 mapclear = "map";
                 destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
                 destination_address = place.getAddress().trim();
@@ -136,7 +153,7 @@ public class MapView extends Fragment implements OnMapReadyCallback,
     private void autoComp() {
 
         autocompleteFragment = (AutocompleteSupportFragment)getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS,Place.Field.ADDRESS_COMPONENTS));
 
     }
 

@@ -13,8 +13,9 @@ public class MainActivity extends AppCompatActivity{
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         HomeFragment fragmentOne = new HomeFragment();
-        fragmentTransaction.add(R.id.frame, fragmentOne);
+        fragmentTransaction.replace(R.id.frame, fragmentOne);
         fragmentTransaction.commit();
+
     }
 
     @Override
