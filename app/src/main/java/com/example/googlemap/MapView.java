@@ -81,7 +81,7 @@ public class MapView extends Fragment implements OnMapReadyCallback,
         button = view.findViewById(R.id.findMap);
         maoLL = view.findViewById(R.id.mapLL);
         HomeFragment.button.setVisibility(View.GONE);
-        Places.initialize(getActivity(), "", Locale.US);
+        Places.initialize(getActivity(), "AIzaSyClXYwahInayLuwd5sQpm5k2jVW2Oc8490", Locale.US);
             mapFragment();
             autoComp();
             autocompClick();
@@ -99,17 +99,6 @@ public class MapView extends Fragment implements OnMapReadyCallback,
                 HomeFragment.addressTV.setVisibility(View.VISIBLE);
                 getFragmentManager().beginTransaction().remove(MapView.this).commit();
                 getFragmentManager().popBackStack();
-
-
-//                maoLL.setVisibility(View.GONE);
-//                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG,Place.Field.ADDRESS);
-//                Intent intent = new Autocomplete.IntentBuilder(
-//                       AutocompleteActivityMode.FULLSCREEN, fields)
-//                        .build(MainActivity.this);
-//                startActivityForResult(intent, 1);
-
-
-
             }
         });
     }
@@ -122,7 +111,7 @@ public class MapView extends Fragment implements OnMapReadyCallback,
             public void onPlaceSelected(@NonNull Place place) {
 
                 Log.e("TAG", "Place: " + place.getName() + ", " + place.getId()+", ");
-                HomeFragment.addressTV.setText(place.getAddress());
+                HomeFragment.address= place.getAddress();
                 mapclear = "map";
                 destination_latlng = place.getLatLng().latitude + "," + place.getLatLng().longitude;
                 destination_address = place.getAddress().trim();

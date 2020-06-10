@@ -12,19 +12,14 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomeFragment homeFragment = new HomeFragment();
-        fragmentTransaction.replace(R.id.frame, homeFragment);
+        HomeFragment fragmentOne = new HomeFragment();
+        fragmentTransaction.add(R.id.frame, fragmentOne);
         fragmentTransaction.commit();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
@@ -36,5 +31,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
     }
+
 
 }

@@ -40,16 +40,14 @@ public class HomeFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addressTV.setVisibility(View.GONE);
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                MapView  mapview = new MapView();
-                fragmentTransaction.replace(R.id.frame1, mapview);
+                MapView mapView = new MapView();
+                fragmentTransaction.replace(R.id.frame,mapView);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
             }
         });
-
         return view;
     }
 }

@@ -10,13 +10,12 @@
     android:layout_height="match_parent"
     android:id="@+id/frame1"/>
     <TextView
-        android:visibility="gone"
         android:id="@+id/addressTV"
         android:gravity="center"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:text="DEHRADUN"/>
 
     <Button
         android:visibility="visible"
