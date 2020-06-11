@@ -74,8 +74,15 @@ public class Fragmentactivity extends FragmentActivity implements OnMapReadyCall
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra("addrerss",destination_address);
+                intent.putExtra("city",city);
+                intent.putExtra("state",state);
+                setResult(RESULT_OK,intent);
+                onBackPressed();
 
-                finish();
+
+                //finish();
 
 //                HomeFragment homeFragment = new HomeFragment ();
 //                Bundle bundle = new Bundle();
@@ -237,11 +244,7 @@ public class Fragmentactivity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra("addrerss",destination_address);
-        intent.putExtra("city",city);
-        intent.putExtra("state",state);
-        setResult(RESULT_OK,intent);
+
         super.finish();
 
     }
