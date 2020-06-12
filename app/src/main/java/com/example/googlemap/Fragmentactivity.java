@@ -66,7 +66,7 @@ public class Fragmentactivity extends FragmentActivity implements OnMapReadyCall
         setContentView(R.layout.activity_fragmentactivity);
         button = findViewById(R.id.findMap);
         maoLL = findViewById(R.id.mapLL);
-        Places.initialize(this, "AIzaSyClXYwahInayLuwd5sQpm5k2jVW2Oc8490", Locale.US);
+        Places.initialize(this, "", Locale.US);
 
         mapFragment();
         autoComp();
