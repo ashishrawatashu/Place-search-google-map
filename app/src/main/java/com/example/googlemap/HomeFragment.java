@@ -55,7 +55,7 @@ public class HomeFragment extends Fragmentactivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(HomeFragment.this,Fragmentactivity.class);
+                Intent intent = new Intent(HomeFragment.this,MoveOnMap.class);
                 startActivityForResult(intent,1);
 //                bundle.remove("addrerss");
 //                bundle.remove("city");
